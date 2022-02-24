@@ -20,10 +20,8 @@ fi
 
 if grep -q -i "Red Hat Enterprise Linux release 8" /etc/redhat-release; then
 	echo "running RHEL 8.x"
-	OS_VER="RHEL8"
 else
 	echo "Unsupported OS. See README for tested distributions."
-	OS_VER="UNSUP"
 	exit 1
 fi
 
@@ -42,21 +40,21 @@ fi
 echo ""
 echo "Building Qt Environment..."
 
-subscription-manager repos --enable=codeready-builder-for-rhel-8-x86_64-rpms
-yum install podman -y
+subscription-manager repos --enable=codeready-builder-for-rhel-8-x86_64-rpms || exit
+yum install podman -y || exit
 git clone https://github.com/DFSupply/DFS_QtApplicationCompileEnvironment
-cd DFS_QtApplicationCompileEnvironment
+cd DFS_QtApplicationCompileEnvironment || exit
 podman build -f DockerFile -t qt-build-env:latest
 podman run --name qt-build-xtuple -it qt-build-env:latest
 
 echo ""
 echo "Qt Environment Running..."
 echo "Building xTuple Client Now..."
-cd ..
+cd .. || exit
 git clone https://github.com/DFSupply/qt-client
-cd qt-client
+cd qt-client || exit
 git submodule update --init --recursive
-cd ..
+cd .. || exit
 
 
 echo ""
