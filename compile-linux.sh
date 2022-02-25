@@ -4,7 +4,7 @@
 #
 # DF Supply, Inc.
 # 02/24/2022
-
+#
 # DO NOT USE IN PRODUCTION WITHOUT PRIOR TESTING
 #
 # Requires:
@@ -42,9 +42,7 @@ echo "Building Qt Environment..."
 
 subscription-manager repos --enable=codeready-builder-for-rhel-8-x86_64-rpms || exit
 yum install podman -y || exit
-git clone https://github.com/DFSupply/DFS_QtApplicationCompileEnvironment
-cd DFS_QtApplicationCompileEnvironment || exit
-podman build -f DockerFile -t qt-build-env:latest
+podman build -f DockerFile https://github.com/DFSupply/DFS_QtApplicationCompileEnvironment.git -t qt-build-env:latest
 podman run --name qt-build-xtuple -it qt-build-env:latest
 
 echo ""
