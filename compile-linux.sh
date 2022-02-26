@@ -42,18 +42,35 @@ echo "Building Qt Environment..."
 
 subscription-manager repos --enable=codeready-builder-for-rhel-8-x86_64-rpms || exit
 yum install podman -y || exit
-podman build -f DockerFile https://github.com/DFSupply/DFS_QtApplicationCompileEnvironment.git -t qt-build-env:latest
-podman run --name qt-build-xtuple -it qt-build-env:latest
+podman build -f DockerFile-linux https://github.com/DFSupply/DFS_QtApplicationCompileEnvironment.git -t qt-build-env:latest
+podman run --name qt-build-xtuple -it -d qt-build-env:latest
 
+# start build inside container
 echo ""
 echo "Qt Environment Running..."
 echo "Building xTuple Client Now..."
-cd .. || exit
+
 git clone https://github.com/DFSupply/qt-client
 cd qt-client || exit
+sed -i -e 's|xtuple|DFSupply|' .gitmodules
 git submodule update --init --recursive
 cd .. || exit
+podman cp qt-client qt-build-xtuple:/opt/
+podman exec qt-build-xtuple bash -c "cd /opt/qt-client/openrpt/ ; qmake;"
+podman exec qt-build-xtuple bash -c "cd /opt/qt-client/openrpt/ ; make -j$(nproc);"
+podman exec qt-build-xtuple bash -c "cd /opt/qt-client/csvimp/ ; qmake;"
+podman exec qt-build-xtuple bash -c "cd /opt/qt-client/csvimp/ ; make -j$(nproc);"
+podman exec qt-build-xtuple bash -c "cd /opt/qt-client/ ; qmake;"
+podman exec qt-build-xtuple bash -c "echo 'LIBS += -L/usr/local/Qt-5.15.2/lib' >> global.pri;" #hacky workaround for lib building issues
+podman exec qt-build-xtuple bash -c "echo 'CONFIG += static' >> global.pri;" #DFS static links xTuple
+podman exec qt-build-xtuple bash -c "cd /opt/qt-client/ ; make -j$(nproc);"
 
+echo ""
+echo "Copying binary back from container..."
+
+mkdir xTupleBuild
+podman cp qt-build-xtuple:/opt/qt-client/bin/xtuple  ./xTupleBuild
+rm -Rf qt-client
 
 echo ""
 echo "Finished!"
