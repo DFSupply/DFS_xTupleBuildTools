@@ -28,7 +28,6 @@ fi
 echo "xTuple Compile Utility (linux x64)"
 echo "DF Supply, Inc."
 echo ""
-
 echo ""
 echo "Please confirm you wish to proceed with the build? (y/n)"
 read -r
@@ -39,7 +38,6 @@ fi
 
 echo ""
 echo "Building Qt Environment..."
-
 subscription-manager repos --enable=codeready-builder-for-rhel-8-x86_64-rpms || exit
 yum install podman -y || exit
 podman build -f DockerFile-linux https://github.com/DFSupply/DFS_QtApplicationCompileEnvironment.git -t qt-build-env:latest
@@ -49,7 +47,6 @@ podman run --name qt-build-xtuple -it -d qt-build-env:latest
 echo ""
 echo "Qt Environment Running..."
 echo "Building xTuple Client Now..."
-
 git clone https://github.com/DFSupply/qt-client
 cd qt-client || exit
 sed -i -e 's|xtuple|DFSupply|' .gitmodules
@@ -67,10 +64,13 @@ podman exec qt-build-xtuple bash -c "cd /opt/qt-client/ ; make -j$(nproc);"
 
 echo ""
 echo "Copying binary back from container..."
-
 mkdir xTupleBuild
 podman cp qt-build-xtuple:/opt/qt-client/bin/xtuple  ./xTupleBuild
 rm -Rf qt-client
+
+echo ""
+echo "Stopping Qt Environment"
+podman stop qt-build-xtuple
 
 echo ""
 echo "Finished!"

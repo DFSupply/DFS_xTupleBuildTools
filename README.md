@@ -9,8 +9,8 @@ Currently setup to clone from private DFS repositories. To use your own REPO, ch
 
 Process:
  - Builds a pod (docker container) based on RHEL 8.x that is setup to compile Qt applications
- - Compiles csvimp (in the pod)
  - Compiles openrpt (in the pod)
+ - Compiles csvimp (in the pod)
  - Compiles qt-client (in the pod)
  - Copies the binaries (out of the pod)
  - Tears down the running container
