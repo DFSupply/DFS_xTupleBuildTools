@@ -31,10 +31,10 @@ docker run --name qt-build-xtuple -it -d qt-build-env:latest
 echo "Qt Environment Running..."
 echo "Building xTuple Client Now..."
 git clone https://github.com/DFSupply/qt-client
-cd qt-client || exit
+cd qt-client
 (Get-Content "$PWD/.gitmodules").replace('xtuple','DFSupply') | Set-Content "$PWD/.gitmodules"
 git submodule update --init --recursive
-cd .. || exit
+cd ..
 
 docker cp qt-client qt-build-xtuple:c:/build-env/
 docker exec qt-build-xtuple bash -c "cd c:/build-env/qt-client/openrpt/ ; c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe ;"
