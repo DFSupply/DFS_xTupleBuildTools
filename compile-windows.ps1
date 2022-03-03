@@ -25,7 +25,9 @@ Read-Host -Prompt "Press any key to confirm or CTRL+C to quit"
 echo ""
 echo "Building Qt Environment..."
 echo ""
-docker build -f "./DockerFile-windows" -t qt-build-env:latest .
+cd ..
+git clone https://github.com/DFSupply/DFS_QtApplicationCompileEnvironment.git
+docker build -f "./DFS_QtApplicationCompileEnvironment/DockerFile-windows" -t qt-build-env:latest .
 docker run --name qt-build-xtuple -it -d qt-build-env:latest
 	
 echo "Qt Environment Running..."
@@ -37,26 +39,25 @@ git submodule update --init --recursive
 cd ..
 
 docker cp qt-client qt-build-xtuple:c:/build-env/
-docker exec qt-build-xtuple bash -c "cd c:/build-env/qt-client/openrpt/ ; c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe ;"
-docker exec qt-build-xtuple bash -c "cd c:/build-env/qt-client/openrpt/ ; jom ;"
-docker exec qt-build-xtuple bash -c "cd c:/build-env/qt-client/csvimp/ ; c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe ;"
-docker exec qt-build-xtuple bash -c "cd c:/build-env/qt-client/csvimp/ ; jom ;"
-docker exec qt-build-xtuple bash -c "cd c:/build-env/qt-client/ ; c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe ;"
-docker exec qt-build-xtuple bash -c "Add-Content C:\build-env\qt-client\global.pri 'LIBS += c:/vcpkg/installed/x64-windows/lib/zlib.lib' ;" #hacky workaround for lib building issues (issues with vcpkg in qmake)
-docker exec qt-build-xtuple bash -c "Add-Content C:\build-env\qt-client\global.pri 'INCLUDEPATH += -Lc:/vcpkg/installed/x64-windows/include' ;" #hacky workaround for lib building issues (issues with vcpkg in qmake)
-docker exec qt-build-xtuple bash -c "$env:LIBRARYPATH='c:\vcpkg\installed\x64-windows\lib' ;" #set library path in ENV
-docker exec qt-build-xtuple bash -c "cd c:/build-env/qt-client/ ; jom ;"
+docker exec qt-build-xtuple powershell "cd c:/build-env/qt-client/openrpt/ ; c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe ;"
+docker exec qt-build-xtuple powershell "cd c:/build-env/qt-client/openrpt/ ; jom ;"
+docker exec qt-build-xtuple powershell "cd c:/build-env/qt-client/csvimp/ ; c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe ;"
+docker exec qt-build-xtuple powershell "cd c:/build-env/qt-client/csvimp/ ; jom ;"
+docker exec qt-build-xtuple powershell "cd c:/build-env/qt-client/ ; c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe ;"
+docker exec qt-build-xtuple powershell "Add-Content C:\build-env\qt-client\global.pri 'LIBS += c:/vcpkg/installed/x64-windows/lib/zlib.lib' ;" #hacky workaround for lib building issues (issues with vcpkg in qmake)
+docker exec qt-build-xtuple powershell "Add-Content C:\build-env\qt-client\global.pri 'INCLUDEPATH += -Lc:/vcpkg/installed/x64-windows/include' ;" #hacky workaround for lib building issues (issues with vcpkg in qmake)
+docker exec qt-build-xtuple powershell "$env:LIBRARYPATH='c:\vcpkg\installed\x64-windows\lib' ;" #set library path in ENV
+docker exec qt-build-xtuple powershell "cd c:/build-env/qt-client/ ; jom ;"
 
 # collect the libraries for distribution
-docker exec qt-build-xtuple bash -c "c:\vcpkg\installed\x64-windows\tools\qt5\bin\windeployqt.exe c:\build-env\qt-client\bin\"
-docker exec qt-build-xtuple bash -c "xcopy c:\vcpkg\intalled\x64-windows\bin\*.dll c:\build-env\qt-client\bin\ /E/H"
-docker exec qt-build-xtuple bash -c "xcopy c:\vcpkg\intalled\x64-windows\plugins\*.dll c:\build-env\qt-client\bin\ /E/H"
+docker exec qt-build-xtuple powershell "c:\vcpkg\installed\x64-windows\tools\qt5\bin\windeployqt.exe c:\build-env\qt-client\bin\"
+docker exec qt-build-xtuple powershell "xcopy c:\vcpkg\intalled\x64-windows\bin\*.dll c:\build-env\qt-client\bin\ /E/H"
+docker exec qt-build-xtuple powershell "xcopy c:\vcpkg\intalled\x64-windows\plugins\*.dll c:\build-env\qt-client\bin\ /E/H"
 
 echo ""
 echo "Copying binary back from container..."
 mkdir xTupleBuild
 docker cp qt-build-xtuple:c:\build-env\qt-client\bin .\xTupleBuild\
-rm -Rf qt-client
 remove-item -path .\qt-client\ -recurse -force
 
 echo ""
