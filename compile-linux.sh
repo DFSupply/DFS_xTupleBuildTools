@@ -41,7 +41,7 @@ echo "Building Qt Environment..."
 subscription-manager repos --enable=codeready-builder-for-rhel-8-x86_64-rpms || exit
 yum install podman -y || exit
 podman build -f DockerFile-linux https://github.com/DFSupply/DFS_QtApplicationCompileEnvironment.git -t qt-build-env:latest
-podman run --name qt-build-xtuple -it -d qt-build-env:latest
+podman run --name qt-build-xtuple -it -d -rm qt-build-env:latest
 
 # start build inside container
 echo ""
