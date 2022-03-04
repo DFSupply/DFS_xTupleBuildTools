@@ -48,8 +48,8 @@ jom
 
 # collect the libraries for distribution
 c:\vcpkg\installed\x64-windows\tools\qt5\bin\windeployqt.exe c:\build-env\qt-client\bin\
-xcopy c:\vcpkg\intalled\x64-windows\bin\*.dll c:\build-env\qt-client\bin\ /E/H/Y
-xcopy c:\vcpkg\intalled\x64-windows\plugins\*.dll c:\build-env\qt-client\bin\ /E/H/Y
+xcopy c:\vcpkg\installed\x64-windows\bin\*.dll c:\build-env\qt-client\bin\ /E/H/Y
+xcopy c:\vcpkg\installed\x64-windows\plugins\*.dll c:\build-env\qt-client\bin\ /E/H/Y
 	
 Compress-Archive -Path c:\build-env\qt-client\bin\* -DestinationPath c:\build-env\qt-client.zip
 cp c:\build-env\qt-client.zip c:\build-archives\qt-client.zip
