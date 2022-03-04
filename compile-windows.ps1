@@ -22,48 +22,40 @@ echo ""
 echo "Please confirm you wish to proceed with the build?"
 Read-Host -Prompt "Press any key to confirm or CTRL+C to quit" 
 
-echo ""
-echo "Building Qt Environment..."
-echo ""
-cd ..
-git clone https://github.com/DFSupply/DFS_QtApplicationCompileEnvironment.git
-docker build -f "./DFS_QtApplicationCompileEnvironment/DockerFile-windows" -t qt-build-env:latest .
-docker run --name qt-build-xtuple -it -d qt-build-env:latest
-	
-echo "Qt Environment Running..."
 echo "Building xTuple Client Now..."
-git clone https://github.com/DFSupply/qt-client
+cd c:\build-env\
+git clone https://$env:GHUSER:$env:GHPASS@github.com/DFSupply/qt-client
 cd qt-client
-(Get-Content "$PWD/.gitmodules").replace('xtuple','DFSupply') | Set-Content "$PWD/.gitmodules"
-git submodule update --init --recursive
-cd ..
+git clone https://$env:GHUSER:$env:GHPASS@github.com/DFSupply/csvimp
+git clone https://$env:GHUSER:$env:GHPASS@github.com/DFSupply/openrpt
 
-docker cp qt-client qt-build-xtuple:c:/build-env/
-docker exec qt-build-xtuple powershell "cd c:/build-env/qt-client/openrpt/ ; c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe ;"
-docker exec qt-build-xtuple powershell "cd c:/build-env/qt-client/openrpt/ ; jom ;"
-docker exec qt-build-xtuple powershell "cd c:/build-env/qt-client/csvimp/ ; c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe ;"
-docker exec qt-build-xtuple powershell "cd c:/build-env/qt-client/csvimp/ ; jom ;"
-docker exec qt-build-xtuple powershell "cd c:/build-env/qt-client/ ; c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe ;"
-docker exec qt-build-xtuple powershell "Add-Content C:\build-env\qt-client\global.pri 'LIBS += c:/vcpkg/installed/x64-windows/lib/zlib.lib' ;" #hacky workaround for lib building issues (issues with vcpkg in qmake)
-docker exec qt-build-xtuple powershell "Add-Content C:\build-env\qt-client\global.pri 'INCLUDEPATH += -Lc:/vcpkg/installed/x64-windows/include' ;" #hacky workaround for lib building issues (issues with vcpkg in qmake)
-docker exec qt-build-xtuple powershell "$env:LIBRARYPATH='c:\vcpkg\installed\x64-windows\lib' ;" #set library path in ENV
-docker exec qt-build-xtuple powershell "cd c:/build-env/qt-client/ ; jom ;"
+Add-Content C:\build-env\qt-client\global.pri 'INCLUDEPATH += "c:\\vcpkg\\installed\\x64-windows\\include"' #workaround for zlib building issues (issues with vcpkg in qmake)
+Add-Content C:\build-env\qt-client\global.pri 'INCLUDEPATH += "c:\\vcpkg\\installed\\x64-windows\\include\\zlib.h"' #workaround for zlib building issues (issues with vcpkg in qmake)
+Add-Content C:\build-env\qt-client\global.pri 'LIBS += "c:\\vcpkg\\installed\\x64-windows\\lib\\zlib.lib"' #workaround for zlib building issues (issues with vcpkg in qmake)
+$env:LIBRARYPATH='c:\vcpkg\installed\x64-windows\lib' #set library path in ENV
+
+cd c:/build-env/qt-client/openrpt/
+c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe
+nmake #don't use jom here. It doesn't link openrpt well to qt-client for some reason
+
+cd c:/build-env/qt-client/csvimp/
+c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe
+nmake
+
+cd c:/build-env/qt-client/
+c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe
+jom
 
 # collect the libraries for distribution
-docker exec qt-build-xtuple powershell "c:\vcpkg\installed\x64-windows\tools\qt5\bin\windeployqt.exe c:\build-env\qt-client\bin\"
-docker exec qt-build-xtuple powershell "xcopy c:\vcpkg\intalled\x64-windows\bin\*.dll c:\build-env\qt-client\bin\ /E/H"
-docker exec qt-build-xtuple powershell "xcopy c:\vcpkg\intalled\x64-windows\plugins\*.dll c:\build-env\qt-client\bin\ /E/H"
-
-echo ""
-echo "Copying binary back from container..."
-mkdir xTupleBuild
-docker cp qt-build-xtuple:c:\build-env\qt-client\bin .\xTupleBuild\
-remove-item -path .\qt-client\ -recurse -force
-
-echo ""
-echo "Stopping Qt Environment"
-docker stop qt-build-xtuple
+c:\vcpkg\installed\x64-windows\tools\qt5\bin\windeployqt.exe c:\build-env\qt-client\bin\
+xcopy c:\vcpkg\intalled\x64-windows\bin\*.dll c:\build-env\qt-client\bin\ /E/H/Y
+xcopy c:\vcpkg\intalled\x64-windows\plugins\*.dll c:\build-env\qt-client\bin\ /E/H/Y
 	
+Compress-Archive -Path c:\build-env\qt-client\bin\* -DestinationPath c:\build-env\qt-client.zip
+cp c:\build-env\qt-client.zip c:\build-archives\qt-client.zip
+
 echo ""
 echo "Finished!"
+echo "Binaries are available at: c:\build-env\qt-client.zip"
+echo "And have been copied back to host directory (if they were mounted in c:\build-archives\ during run)"
 echo ""

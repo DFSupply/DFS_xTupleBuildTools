@@ -22,3 +22,12 @@ cd DFS_xTupleBuildTools
 chmod +x compile-linux.sh
 ./compile-linux.sh
 ```
+
+Compile for native (x64_windows):   
+*note: cannot be run in detached mode like the linux build due to a limitaion of MSVC needing batch file bootstrapped*   
+```
+mkdir build-archives
+git clone https://github.com/DFSupply/DFS_QtApplicationCompileEnvironment.git
+docker build -f "./DFS_QtApplicationCompileEnvironment/DockerFile-windows" -t qt-build-env:latest .
+docker run --name qt-build-xtuple -it --rm --env GHUSER=%your_github_username% --env GHPASS=%your_github_token_pass% -v $PWD\build-archives\:c:\build-archives\ qt-build-env:latest
+```
