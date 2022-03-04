@@ -30,4 +30,11 @@ mkdir build-archives
 git clone https://github.com/DFSupply/DFS_QtApplicationCompileEnvironment.git
 docker build -f "./DFS_QtApplicationCompileEnvironment/DockerFile-windows" -t qt-build-env:latest .
 docker run --name qt-build-xtuple -it --rm --env GHUSER=%your_github_username% --env GHPASS=%your_github_token_pass% -v $PWD\build-archives\:c:\build-archives\ qt-build-env:latest
+
+----inside of container----
+----PowerShell----
+cd c:\build-env\
+git clone https://github.com/DFSupply/DFS_xTupleBuildTools.git
+cd DFS_xTupleBuildTools
+.\compile-windows.ps1
 ```
