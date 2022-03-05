@@ -33,6 +33,11 @@ Add-Content C:\build-env\qt-client\global.pri 'INCLUDEPATH += "c:\\vcpkg\\instal
 Add-Content C:\build-env\qt-client\global.pri 'INCLUDEPATH += "c:\\vcpkg\\installed\\x64-windows\\include\\zlib.h"' #workaround for zlib building issues (issues with vcpkg in qmake)
 Add-Content C:\build-env\qt-client\global.pri 'LIBS += "c:\\vcpkg\\installed\\x64-windows\\lib\\zlib.lib"' #workaround for zlib building issues (issues with vcpkg in qmake)
 $env:LIBRARYPATH='c:\vcpkg\installed\x64-windows\lib' #set library path in ENV
+	
+#change exception handling
+Add-Content C:\build-env\qt-client\global.pri 'QMAKE_CXXFLAGS_EXCEPTIONS_ON = /EHa'
+Add-Content C:\build-env\qt-client\global.pri 'QMAKE_CXXFLAGS_STL_ON = /EHa'
+Add-Content C:\build-env\qt-client\global.pri 'QMAKE_CXXFLAGS += /EHa'
 
 cd c:/build-env/qt-client/openrpt/
 c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe
