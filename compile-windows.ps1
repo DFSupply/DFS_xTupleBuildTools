@@ -55,6 +55,13 @@ jom
 c:\vcpkg\installed\x64-windows\tools\qt5\bin\windeployqt.exe c:\build-env\qt-client\bin\
 xcopy c:\vcpkg\installed\x64-windows\bin\*.dll c:\build-env\qt-client\bin\ /E/H/Y
 xcopy c:\vcpkg\installed\x64-windows\plugins\*.dll c:\build-env\qt-client\bin\ /E/H/Y
+# xcopy c:\vcpkg\installed\x64-windows\tools\qt5\QtWebEngineProcess.exe c:\build-env\qt-client\bin\ /E/H/Y
+xcopy c:\programdata\chocolatey\lib\curl\tools\curl-7.81.0-win64-mingw\bin\curl.exe c:\build-env\qt-client\bin\ /E/H/Y
+
+#gather DFS Dictionaries
+cd c:/build-env/
+git clone https://$env:GHUSER:$env:GHPASS@github.com/DFSupply/DFS_DictionaryFiles
+xcopy c:\build-env\DFS_DictionaryFiles\en_US.* c:\build-env\qt-client\bin\ /E/H/Y
 	
 Compress-Archive -Path c:\build-env\qt-client\bin\* -DestinationPath c:\build-env\qt-client.zip
 cp c:\build-env\qt-client.zip c:\build-archives\qt-client.zip
