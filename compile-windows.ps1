@@ -55,8 +55,11 @@ jom
 c:\vcpkg\installed\x64-windows\tools\qt5\bin\windeployqt.exe c:\build-env\qt-client\bin\
 xcopy c:\vcpkg\installed\x64-windows\bin\*.dll c:\build-env\qt-client\bin\ /E/H/Y
 xcopy c:\vcpkg\installed\x64-windows\plugins\*.dll c:\build-env\qt-client\bin\ /E/H/Y
-# xcopy c:\vcpkg\installed\x64-windows\tools\qt5\QtWebEngineProcess.exe c:\build-env\qt-client\bin\ /E/H/Y
+xcopy c:\vcpkg\installed\x64-windows\tools\qt5\QtWebEngineProcess.exe c:\build-env\qt-client\bin\ /E/H/Y
+mkdir c:\build-env\qt-client\bin\resources
+xcopy c:\vcpkg\installed\x64-windows\share\qt5\resources\ c:\build-env\qt-client\bin\resources /E/H/Y
 xcopy c:\programdata\chocolatey\lib\curl\tools\curl-7.81.0-win64-mingw\bin\curl.exe c:\build-env\qt-client\bin\ /E/H/Y
+Invoke-WebRequest -Uri 'https://curl.se/ca/cacert.pem' -OutFile 'c:\build-env\qt-client\bin\curl-ca-bundle.crt'
 
 #gather DFS Dictionaries
 cd c:/build-env/
