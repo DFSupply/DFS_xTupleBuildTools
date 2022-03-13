@@ -24,6 +24,13 @@ Read-Host -Prompt "Press any key to confirm or CTRL+C to quit"
 
 echo "Building xTuple Client Now..."
 cd c:\build-env\
+	
+git clone https://github.com/qt/qtftp
+cd qtftp
+nmake
+nmake install 
+
+cd c:\build-env\
 git clone https://$env:GHUSER:$env:GHPASS@github.com/DFSupply/qt-client
 cd qt-client
 git clone https://$env:GHUSER:$env:GHPASS@github.com/DFSupply/csvimp
@@ -52,28 +59,28 @@ cd c:/build-env/qt-client/
 c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe
 jom
 
-cd c:/build-env/connect/application/
+cd c:/build-env/qt-client/connect/application/
 c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe
 nmake
 
 # collect the libraries for distribution
 c:\vcpkg\installed\x64-windows\tools\qt5\bin\windeployqt.exe c:\build-env\qt-client\bin\
-c:\vcpkg\installed\x64-windows\tools\qt5\bin\windeployqt.exe c:\build-env\connect\application\bin\
+c:\vcpkg\installed\x64-windows\tools\qt5\bin\windeployqt.exe c:\build-env\qt-client\connect\application\bin\
 	
 xcopy c:\vcpkg\installed\x64-windows\bin\*.dll c:\build-env\qt-client\bin\ /E/H/Y
-xcopy c:\vcpkg\installed\x64-windows\bin\*.dll c:\build-env\connect\application\bin\ /E/H/Y
+xcopy c:\vcpkg\installed\x64-windows\bin\*.dll c:\build-env\qt-client\connect\application\bin\ /E/H/Y
 
 xcopy c:\vcpkg\installed\x64-windows\plugins\*.dll c:\build-env\qt-client\bin\ /E/H/Y
-xcopy c:\vcpkg\installed\x64-windows\plugins\*.dll c:\build-env\connect\application\bin\ /E/H/Y
+xcopy c:\vcpkg\installed\x64-windows\plugins\*.dll c:\build-env\qt-client\connect\application\bin\ /E/H/Y
 
 xcopy c:\vcpkg\installed\x64-windows\tools\qt5\QtWebEngineProcess.exe c:\build-env\qt-client\bin\ /E/H/Y
-xcopy c:\vcpkg\installed\x64-windows\tools\qt5\QtWebEngineProcess.exe c:\build-env\connect\application\bin\ /E/H/Y
+xcopy c:\vcpkg\installed\x64-windows\tools\qt5\QtWebEngineProcess.exe c:\build-env\qt-client\connect\application\bin\ /E/H/Y
 
 mkdir c:\build-env\qt-client\bin\resources
-mkdir c:\build-env\connect\application\bin\resources
+mkdir c:\build-env\qt-client\connect\application\bin\resources
 
 xcopy c:\vcpkg\installed\x64-windows\share\qt5\resources\ c:\build-env\qt-client\bin\resources /E/H/Y
-xcopy c:\vcpkg\installed\x64-windows\share\qt5\resources\ c:\build-env\connect\application\bin\resources /E/H/Y
+xcopy c:\vcpkg\installed\x64-windows\share\qt5\resources\ c:\build-env\qt-client\connect\application\bin\resources /E/H/Y
 
 xcopy c:\programdata\chocolatey\lib\curl\tools\curl-7.81.0-win64-mingw\bin\curl.exe c:\build-env\qt-client\bin\ /E/H/Y
 Invoke-WebRequest -Uri 'https://curl.se/ca/cacert.pem' -OutFile 'c:\build-env\qt-client\bin\curl-ca-bundle.crt'
@@ -86,7 +93,7 @@ xcopy c:\build-env\DFS_DictionaryFiles\en_US.* c:\build-env\qt-client\bin\ /E/H/
 Compress-Archive -Path c:\build-env\qt-client\bin\* -DestinationPath c:\build-env\qt-client.zip
 cp c:\build-env\qt-client.zip c:\build-archives\qt-client.zip
 	
-Compress-Archive -Path c:\build-env\connect\application\bin\* -DestinationPath c:\build-env\xtConnect.zip
+Compress-Archive -Path c:\build-env\qt-client\connect\application\bin\* -DestinationPath c:\build-env\xtConnect.zip
 cp c:\build-env\xtConnect.zip c:\build-archives\xtConnect.zip
 
 echo ""
