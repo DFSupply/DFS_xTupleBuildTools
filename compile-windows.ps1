@@ -27,6 +27,7 @@ cd c:\build-env\
 	
 git clone https://github.com/qt/qtftp
 cd qtftp
+c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe
 nmake
 nmake install 
 
