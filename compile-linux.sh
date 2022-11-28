@@ -8,9 +8,9 @@
 # DO NOT USE IN PRODUCTION WITHOUT PRIOR TESTING
 #
 # Requires:
-# RHEL 8.x
+# RHEL 8.x or RHEL 9.x
 #
-# Built for RHEL 8 by Scott D Moore @ DF Supply - scott.moore@dfsupplyinc.com
+# Built for RHEL 8/9 by Scott D Moore @ DF Supply - scott.moore@dfsupplyinc.com
 
 if [[ $(id -u) -ne 0 ]]
 	then
@@ -20,8 +20,13 @@ fi
 
 if grep -q -i "Red Hat Enterprise Linux release 8" /etc/redhat-release; then
 	echo "running RHEL 8.x"
+	OS_VER="RHEL8"
+elif grep -q -i "Red Hat Enterprise Linux release 9" /etc/redhat-release; then
+	echo "running RHEL 9.x"
+	OS_VER="RHEL9"
 else
 	echo "Unsupported OS. See README for tested distributions."
+	OS_VER="UNSUP"
 	exit 1
 fi
 
@@ -38,7 +43,11 @@ fi
 
 echo ""
 echo "Building Qt Environment..."
-subscription-manager repos --enable=codeready-builder-for-rhel-8-x86_64-rpms || exit
+if [ "$OS_VER" == "RHEL8" ]; then
+	subscription-manager repos --enable=codeready-builder-for-rhel-8-x86_64-rpms || exit
+elif [ "$OS_VER" == "RHEL9" ]; then
+	subscription-manager repos --enable=codeready-builder-for-rhel-9-x86_64-rpms || exit
+fi
 yum install podman -y || exit
 podman build -f DockerFile-linux https://github.com/DFSupply/DFS_QtApplicationCompileEnvironment.git -t qt-build-env:latest
 podman run --name qt-build-xtuple -it -d -rm qt-build-env:latest

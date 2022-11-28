@@ -1,7 +1,7 @@
 # DFS_xTupleBuildTools
 Compiles xTuple 6.x for multiple platforms
 
-Tested and built for RHEL 8.x
+Tested and built for RHEL 8.x, RHEL 9.x, and Windows Server 2022
 
 ## You must have git setup already with SSH key (as this uses private REPOs)
 
@@ -15,7 +15,7 @@ Process:
  - Copies the binaries (out of the pod)
  - Tears down the running container
 
-Compile for native (x64_linux):
+Compile for native (x64_linux) *tested in RHEl 8/9*:
 ```
 git clone https://github.com/DFSupply/DFS_xTupleBuildTools.git
 cd DFS_xTupleBuildTools
@@ -23,7 +23,7 @@ chmod +x compile-linux.sh
 ./compile-linux.sh
 ```
 
-Compile for native (x64_windows):   
+Compile for native (x64_windows) *tested in Windows Server 2022*:   
 *note: cannot be run in detached mode like the linux build due to a limitaion of MSVC needing batch file bootstrapped*   
 ```
 mkdir build-archives
