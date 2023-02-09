@@ -27,7 +27,7 @@ cd c:\build-env\
 	
 git clone https://github.com/DFSupply/qtftp
 cd qtftp
-c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe
+c:\vcpkg\installed\x64-windows\tools\qt6\bin\qmake.exe
 nmake
 nmake install 
 
@@ -49,24 +49,24 @@ Add-Content C:\build-env\qt-client\global.pri 'QMAKE_CXXFLAGS_STL_ON = /EHa'
 Add-Content C:\build-env\qt-client\global.pri 'QMAKE_CXXFLAGS += /EHa'
 
 cd c:/build-env/qt-client/openrpt/
-c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe
+c:\vcpkg\installed\x64-windows\tools\qt6\bin\qmake.exe
 nmake #don't use jom here. It doesn't link openrpt well to qt-client for some reason
 
 cd c:/build-env/qt-client/csvimp/
-c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe
+c:\vcpkg\installed\x64-windows\tools\qt6\bin\qmake.exe
 nmake
 
 cd c:/build-env/qt-client/
-c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe
+c:\vcpkg\installed\x64-windows\tools\qt6\bin\qmake.exe
 jom
 
 cd c:/build-env/qt-client/connect/application/
-c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe
+c:\vcpkg\installed\x64-windows\tools\qt6\bin\qmake.exe
 nmake
 
 # collect the libraries for distribution
-c:\vcpkg\installed\x64-windows\tools\qt5\bin\windeployqt.exe c:\build-env\qt-client\bin\
-c:\vcpkg\installed\x64-windows\tools\qt5\bin\windeployqt.exe c:\build-env\qt-client\connect\application\bin\
+c:\vcpkg\installed\x64-windows\tools\qt6\bin\windeployqt.exe c:\build-env\qt-client\bin\
+c:\vcpkg\installed\x64-windows\tools\qt6\bin\windeployqt.exe c:\build-env\qt-client\connect\application\bin\
 	
 xcopy c:\vcpkg\installed\x64-windows\bin\*.dll c:\build-env\qt-client\bin\ /E/H/Y
 xcopy c:\vcpkg\installed\x64-windows\bin\*.dll c:\build-env\qt-client\connect\application\bin\ /E/H/Y
@@ -74,14 +74,14 @@ xcopy c:\vcpkg\installed\x64-windows\bin\*.dll c:\build-env\qt-client\connect\ap
 xcopy c:\vcpkg\installed\x64-windows\plugins\*.dll c:\build-env\qt-client\bin\ /E/H/Y
 xcopy c:\vcpkg\installed\x64-windows\plugins\*.dll c:\build-env\qt-client\connect\application\bin\ /E/H/Y
 
-xcopy c:\vcpkg\installed\x64-windows\tools\qt5\QtWebEngineProcess.exe c:\build-env\qt-client\bin\ /E/H/Y
-xcopy c:\vcpkg\installed\x64-windows\tools\qt5\QtWebEngineProcess.exe c:\build-env\qt-client\connect\application\bin\ /E/H/Y
+xcopy c:\vcpkg\installed\x64-windows\tools\qt6\QtWebEngineProcess.exe c:\build-env\qt-client\bin\ /E/H/Y
+xcopy c:\vcpkg\installed\x64-windows\tools\qt6\QtWebEngineProcess.exe c:\build-env\qt-client\connect\application\bin\ /E/H/Y
 
 mkdir c:\build-env\qt-client\bin\resources
 mkdir c:\build-env\qt-client\connect\application\bin\resources
 
-xcopy c:\vcpkg\installed\x64-windows\share\qt5\resources\ c:\build-env\qt-client\bin\resources /E/H/Y
-xcopy c:\vcpkg\installed\x64-windows\share\qt5\resources\ c:\build-env\qt-client\connect\application\bin\resources /E/H/Y
+xcopy c:\vcpkg\installed\x64-windows\share\qt6\resources\ c:\build-env\qt-client\bin\resources /E/H/Y
+xcopy c:\vcpkg\installed\x64-windows\share\qt6\resources\ c:\build-env\qt-client\connect\application\bin\resources /E/H/Y
 
 xcopy c:\programdata\chocolatey\lib\curl\tools\curl-7.81.0-win64-mingw\bin\curl.exe c:\build-env\qt-client\bin\ /E/H/Y
 Invoke-WebRequest -Uri 'https://curl.se/ca/cacert.pem' -OutFile 'c:\build-env\qt-client\bin\curl-ca-bundle.crt'
