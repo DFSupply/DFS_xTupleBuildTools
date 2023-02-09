@@ -67,7 +67,7 @@ podman exec qt-build-xtuple bash -c "cd /opt/qt-client/openrpt/ ; make -j$(nproc
 podman exec qt-build-xtuple bash -c "cd /opt/qt-client/csvimp/ ; qmake;"
 podman exec qt-build-xtuple bash -c "cd /opt/qt-client/csvimp/ ; make -j$(nproc);"
 podman exec qt-build-xtuple bash -c "cd /opt/qt-client/ ; qmake;"
-podman exec qt-build-xtuple bash -c "echo 'LIBS += -L/usr/local/Qt-5.15.8/lib' >> global.pri;" #hacky workaround for lib building issues
+podman exec qt-build-xtuple bash -c "echo 'LIBS += -L/usr/local/Qt-6.4.2/lib' >> global.pri;" #hacky workaround for lib building issues
 podman exec qt-build-xtuple bash -c "cd /opt/qt-client/ ; make -j$(nproc);"
 
 echo ""
