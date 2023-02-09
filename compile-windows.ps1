@@ -25,7 +25,7 @@ Read-Host -Prompt "Press any key to confirm or CTRL+C to quit"
 echo "Building xTuple Client Now..."
 cd c:\build-env\
 	
-git clone https://github.com/qt/qtftp
+git clone https://github.com/DFSupply/qtftp
 cd qtftp
 c:\vcpkg\installed\x64-windows\tools\qt5\bin\qmake.exe
 nmake
