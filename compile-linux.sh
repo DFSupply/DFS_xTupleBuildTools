@@ -49,8 +49,8 @@ elif [ "$OS_VER" == "RHEL9" ]; then
 	subscription-manager repos --enable=codeready-builder-for-rhel-9-x86_64-rpms || exit
 fi
 yum install podman -y || exit
-podman build -f DockerFile-linux https://github.com/DFSupply/DFS_QtApplicationCompileEnvironment.git -t qt-build-env:latest
-podman run --name qt-build-xtuple -it -d -rm qt-build-env:latest
+podman pull dfsbuildcontainer.azurecr.io/qt-build-env-linux:latest
+podman run --name qt-build-xtuple -it -d -rm dfsbuildcontainer.azurecr.io/qt-build-env-linux:latest
 
 # start build inside container
 echo ""
