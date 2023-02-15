@@ -58,8 +58,8 @@ echo "Qt Environment Running..."
 echo "Building xTuple Client Now..."
 git clone https://github.com/DFSupply/qt-client
 cd qt-client || exit
-sed -i -e 's|xtuple|DFSupply|' .gitmodules
-git submodule update --init --recursive
+git clone https://github.com/DFSupply/csvimp
+git clone https://github.com/DFSupply/openrpt
 cd .. || exit
 podman cp qt-client qt-build-xtuple:/opt/
 podman exec qt-build-xtuple bash -c "cd /opt/qt-client/openrpt/ ; qmake;"
